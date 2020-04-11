@@ -1,6 +1,6 @@
 <template>
     <section class="page">
-        <div style="position: relative">
+        <div style="position: relative" class="flex">
             <div class="search-box center">
                 <div class="bg"></div>
                 <div class="search">
@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div :class="showSearch?'search-card-show':'search-card-hidden'"
-                 style="position: absolute;top: 160px;left: 50%;transform: translate(-50%, 0);">
+                 style="position: absolute;top: 160px;left: 50%;transform: translate(-50%, 0);z-index: 999">
                 <search-card @keySearch="keySearch" :isRank="key===''" :keys="keys"/>
             </div>
         </div>
@@ -222,8 +222,7 @@
         padding: 40px 120px 0 120px;
 
         .el-table {
-            z-index: -1;
-
+            z-index: 10;
         }
 
     }
