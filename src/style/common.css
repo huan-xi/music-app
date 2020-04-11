@@ -1,5 +1,7 @@
 body{
-    margin: 0px;
+    margin: 0;
+    font-size: 14px;
+    font-family: Microsoft YaHei, Helvetica Neue, Helvetica, STHeiTi, sans-serif
 }
 
 /*flex 布局*/

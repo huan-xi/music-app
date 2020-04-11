@@ -1,16 +1,25 @@
 <template>
     <section class="page">
-        <div class="search-box center">
-            <div class="bg"></div>
-            <div class="search">
-                <el-input
-                        v-model="key"
-                        style="width: 725px;height: 55px"
-                        placeholder="搜索音乐/MV/歌单/歌手"
-                        size="large">
-                    <el-button slot="append"
-                               icon="el-icon-search" @click="searchMusic"/>
-                </el-input>
+        <div style="position: relative">
+            <div class="search-box center">
+                <div class="bg"></div>
+                <div class="search">
+                    <el-input
+                            @keyup.enter.native="searchMusic"
+                            @focus="getKey"
+                            v-model="key"
+                            @input="getKey"
+                            @blur="showSearch=false"
+                            style="width: 725px;height: 55px"
+                            placeholder="搜索音乐/MV/歌单/歌手"
+                            size="large">
+                        <el-button slot="append" icon="el-icon-search" @click="searchMusic"/>
+                    </el-input>
+                </div>
+            </div>
+            <div :class="showSearch?'search-card-show':'search-card-hidden'"
+                 style="position: absolute;top: 160px;left: 50%;transform: translate(-50%, 0);">
+                <search-card @keySearch="keySearch" :isRank="key===''" :keys="keys"/>
             </div>
         </div>
         <div class="container">
@@ -83,8 +92,11 @@
                     </el-table-column>
                 </el-table>
             </div>
+            <div v-if="page.total>0" class="flex-reverse" style="margin-top: 20px">
+                <m-pagination @refresh="searchMusic" v-model="page"></m-pagination>
+            </div>
         </div>
-
+        <div style="height: 30px;width: 100%"></div>
     </section>
 </template>
 
@@ -92,13 +104,33 @@
 
     import {download} from "../common/util/download";
     import config from "../common/util/config";
+    import SearchCard from "./SearchCard";
+    import MPagination from "./mPagination";
 
     export default {
         name: 'HelloWorld',
+        components: {MPagination, SearchCard},
         props: {
             msg: String
         },
+        created() {
+            this.searchMusic()
+        },
+
         methods: {
+            keySearch(key) {
+                this.key = key;
+                this.searchMusic();
+            },
+            getKey() {
+                this.showSearch = true;
+                this.musicService.getKey({
+                    key: this.key
+                }).then(res => {
+
+                    this.keys = res.data
+                })
+            },
             searchMusic() {
                 this.loading = true;
                 this.musicService.getMusicList({
@@ -108,7 +140,7 @@
                 }).then(res => {
                     if (res.code === 200) {
                         this.dataList = res.data.list
-                        this.page.total = res.data.total
+                        this.page.total = parseInt(res.data.total)
                     }
                 }).finally(() => this.loading = false)
             },
@@ -138,8 +170,10 @@
         },
         data() {
             return {
+                showSearch: false,
                 loading: false,
-                key: '周杰伦',
+                key: '',
+                keys: [],
                 dataList: [],
                 page: {
                     total: 0,
@@ -159,11 +193,25 @@
     }
 
     .musics {
+        z-index: -1;
         margin-top: 30px;
+    }
+
+    .search-card-show {
+        opacity: 1;
+    }
+
+    .search-card-hidden {
+        opacity: 0;
     }
 
     .page {
         font-family: Microsoft YaHei, Helvetica Neue, Helvetica, STHeiTi, sans-serif;
+    }
+
+    .search {
+        position: relative;
+        overflow: visible !important;
     }
 
     .search .el-input__inner {
@@ -172,13 +220,19 @@
 
     .container {
         padding: 40px 120px 0 120px;
+
+        .el-table {
+            z-index: -1;
+
+        }
+
     }
 
     .search-box {
+        overflow: hidden;
         position: relative;
         height: 245px;
         width: 100%;
-        overflow: hidden;
     }
 
     .bg {
@@ -209,12 +263,14 @@
         }
 
         li {
+            z-index: -1;
             height: 20px;
             line-height: 20px;
             margin-right: 34px;
             position: relative;
             font-weight: 300;
             color: #333;
+
         }
 
         li:hover {
@@ -235,7 +291,7 @@
             width: 100%;
             height: 6px;
             background: #ffe443;
-            z-index: -1;
+            z-index: -22;
         }
     }
 </style>

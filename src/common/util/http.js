@@ -13,6 +13,7 @@ axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded;char
 axios.interceptors.request.use(
     (config) => {
         config.baseURL = Config.baseUrl
+
         if (config.method === 'post') {
             config.data = Qs.stringify(config.data)
         }
