@@ -1,0 +1,43 @@
+body{
+    margin: 0px;
+}
+
+/*flex 布局*/
+.flex {
+    display: flex;
+    flex-direction: row;
+}
+
+/*flex 两端对齐*/
+.flex-between {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* 垂直居中 */
+    justify-content: space-between;
+}
+
+.flex-horizontal-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* 水平居中 */
+}
+
+.flex-vertical-center {
+    display: flex;
+    align-items: center; /* 垂直居中 */
+}
+.flex-reverse{
+    display: flex;
+    flex-direction: row-reverse;
+}
+/*块元素垂直居中*/
+.center {
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+}
+
+/*元素水平居中*/
+.text-center {
+    text-align: center;
+}
