@@ -1,5 +1,6 @@
 // 域名
-const baseUrl = '/api'
+const baseUrl = 'https://music.chengfeng8.top/api'
+// const baseUrl = 'http://test.tb.xqcrm.com/music_api'
 const callbackUrl = 'https://tb.xqcrm.com/api/open/auth'
 const authUrl = `https://oauth.taobao.com/authorize?response_type=code&client_id=12686282&redirect_uri=${callbackUrl}&view=web&state=short`
 

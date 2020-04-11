@@ -1,4 +1,4 @@
-let target = process.env.target ? process.env.target : 'http://localhost:8008';
+let target = process.env.target ? process.env.target : 'http://test.tb.xqcrm.com:8008';
 
 console.log("当前代理地址:" + target);
 
