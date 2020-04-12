@@ -12,4 +12,5 @@ export let getLink = (params) => get('/music/link', params)
 export let save = (params) => post('/music/save', params)
 export let download = (params) => get('/music/download', params)
 export let getKey = (params) => get('/music/searchKey', params)
+export let getInfo = (params) => get('/info', params)
 

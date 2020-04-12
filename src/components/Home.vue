@@ -99,9 +99,13 @@
         <div class="player" v-if="songSrc">
             <audio :src="songSrc" id="musicMp3" autoplay="" controls=""></audio>
         </div>
+        <div>
+            <friendly-link/>
+        </div>
+
         <div class="footer">
             本站内容音乐下载器根据您的指令搜索各音乐平台得到的链接列表，不代表本站赞成被搜索网站的内容或立场
-            如果版权人认为在本站放置您的作品有损您的利益，请<a style="text-underline: none;color: #333333" href="mailto:1355473748@qq.com">联系</a>管理人员，本站确认后将会立即删除。<span style="color: red">本站所有资源仅供学习使用，请勿用于商业用途</span>
+            如果版权人认为在本站放置您的作品有损您的利益，请<a style="text-underline: none;color: #333333" href="mailto:1355473748@qq.com">联系</a>管理人员，本站确认后将会立即删除。<span style="color: red">本站所有资源仅供学习使用，请勿用于商业用途,下载后请二十四小时内删除</span>
         </div>
     </section>
 </template>
@@ -113,14 +117,16 @@
     import SearchCard from "./SearchCard";
     import MPagination from "./mPagination";
     import Player from "./Player";
+    import FriendlyLink from "./FriendlyLink";
 
     export default {
         name: 'HelloWorld',
-        components: {Player, MPagination, SearchCard},
+        components: {FriendlyLink, Player, MPagination, SearchCard},
         props: {
             msg: String
         },
         created() {
+
         },
 
         methods: {
@@ -212,12 +218,12 @@
     .footer {
         padding: 10px 180px;
         text-align: center;
-        margin-top: 20px;
+        margin-top: 0;
         color: #bdbdbd;
     }
 
     .music-title {
-        color: #b3b3b3;
+        color: #333;
     }
 
     .player {
@@ -253,7 +259,7 @@
     }
 
     .container {
-        min-height: 400px;
+        min-height: 380px;
         padding: 40px 120px 0 120px;
 
         .el-table {
