@@ -14,10 +14,8 @@ let proxy = mockApis([
 ]);
 
 proxy["/api"] = {
-  // target: 'https://tb.xqcrm.com', //生产环境
   target: target, //开发环境
-  // target: 'http://test.tb.xqcrm.com', //测试环境
-  // target: 'http://prev.tb.xqcrm.com', //预览环境(类似生产环境)
+
   changeOrigin: true,
   ws: true,
   pathRewrite: {

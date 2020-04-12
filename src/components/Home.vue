@@ -9,7 +9,7 @@
                             @focus="getKey"
                             v-model="key"
                             @input="getKey"
-                            @blur="showSearch=false"
+                            @blur="blur"
                             style="width: 725px;height: 55px"
                             placeholder="搜索音乐/MV/歌单/歌手"
                             size="large">
@@ -17,7 +17,7 @@
                     </el-input>
                 </div>
             </div>
-            <div :class="showSearch?'search-card-show':'search-card-hidden'"
+            <div v-if="showSearch"
                  style="position: absolute;top: 160px;left: 50%;transform: translate(-50%, 0);z-index: 999">
                 <search-card @keySearch="keySearch" :isRank="key===''" :keys="keys"/>
             </div>
@@ -96,7 +96,13 @@
                 <m-pagination @refresh="searchMusic" v-model="page"></m-pagination>
             </div>
         </div>
-        <div style="height: 30px;width: 100%"></div>
+        <div class="player" v-if="songSrc">
+            <audio :src="songSrc" id="musicMp3" autoplay="" controls=""></audio>
+        </div>
+        <div class="footer">
+            本站内容音乐下载器根据您的指令搜索各音乐平台得到的链接列表，不代表本站赞成被搜索网站的内容或立场
+            如果版权人认为在本站放置您的作品有损您的利益，请<a style="text-underline: none;color: #333333" href="mailto:1355473748@qq.com">联系</a>管理人员，本站确认后将会立即删除。<span style="color: red">本站所有资源仅供学习使用，请勿用于商业用途</span>
+        </div>
     </section>
 </template>
 
@@ -106,18 +112,24 @@
     import config from "../common/util/config";
     import SearchCard from "./SearchCard";
     import MPagination from "./mPagination";
+    import Player from "./Player";
 
     export default {
         name: 'HelloWorld',
-        components: {MPagination, SearchCard},
+        components: {Player, MPagination, SearchCard},
         props: {
             msg: String
         },
         created() {
-            this.searchMusic()
         },
 
         methods: {
+
+            blur() {
+                setTimeout(() => {
+                    this.showSearch = false
+                }, 300);
+            },
             keySearch(key) {
                 this.key = key;
                 this.searchMusic();
@@ -127,7 +139,6 @@
                 this.musicService.getKey({
                     key: this.key
                 }).then(res => {
-
                     this.keys = res.data
                 })
             },
@@ -149,7 +160,14 @@
                 this.musicService.getLink({
                     rid: rid
                 }).then(res => {
-                    window.open(res.data)
+                    this.songSrc = res.data
+                    const musicMp3 = document.getElementById('musicMp3')
+                    if (!this.isStore) {
+                        musicMp3.play()
+                    } else {
+                        musicMp3.pause()
+                    }
+                    //window.open(res.data)
                 })
             },
             downloadMusic(info) {
@@ -170,6 +188,9 @@
         },
         data() {
             return {
+                progress: 0,
+                isStore: true,
+                songSrc: '',
                 showSearch: false,
                 loading: false,
                 key: '',
@@ -188,8 +209,21 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less">
+    .footer {
+        padding: 10px 180px;
+        text-align: center;
+        margin-top: 20px;
+        color: #bdbdbd;
+    }
+
     .music-title {
-        color: #333;
+        color: #b3b3b3;
+    }
+
+    .player {
+        position: fixed;
+        bottom: 0;
+        z-index: 999;
     }
 
     .musics {
@@ -219,6 +253,7 @@
     }
 
     .container {
+        min-height: 400px;
         padding: 40px 120px 0 120px;
 
         .el-table {
@@ -262,7 +297,6 @@
         }
 
         li {
-            z-index: -1;
             height: 20px;
             line-height: 20px;
             margin-right: 34px;

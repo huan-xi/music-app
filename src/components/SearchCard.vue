@@ -62,7 +62,6 @@
 <style scoped lang="less">
     .search-card {
         width: 725px;
-        z-index: 1;
         transition-property: top;
         transition-duration: .2s;
         transition-timing-function: ease-in-out;
