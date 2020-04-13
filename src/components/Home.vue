@@ -27,85 +27,95 @@
                 <span class="result-text">搜索结果</span>
                 <div class="tabs-title">
                     <ul>
-                        <li class="active">单曲</li>
+                        <li :class="tabs===0?'active':''" @click="clickTabs(0)">单曲</li>
                         <li>专辑</li>
-                        <li>MV</li>
+                        <li :class="tabs===2?'active':''" @click="clickTabs(2)">MV</li>
                         <li>歌单</li>
                         <li>歌手</li>
                     </ul>
                 </div>
             </div>
-            <div class="musics">
-                <el-table
-                        v-loading="loading"
-                        :data="dataList"
-                        style="width: 100%">
-                    <el-table-column
-                            label="序号"
-                            type="index"
-                            width="50">
-                    </el-table-column>
-                    <el-table-column
-                            label="歌曲"
-                            width="400">
-                        <template slot-scope="scope">
-                            <div class="flex-vertical-center">
-                                <el-image
-                                        style="width: 55px; height: 55px;margin-right: 30px"
-                                        :src="scope.row.pic"
-                                        fit="fit"></el-image>
-                                <div class="center" style="height: 55px">
-                                    <span class="music-title">{{scope.row.name}}</span>
-                                    <img style="width: 30px;height: 16px;margin-left: 5px" src="/assets/wusun.png">
-                                    <img style="width: 30px;height: 30px;margin-left: 5px" src="/assets/mv.png">
+            <div v-if="tabs===0">
+                <div class="musics">
+                    <el-table
+                            v-loading="loading"
+                            :data="dataList"
+                            style="width: 100%">
+                        <el-table-column
+                                label="序号"
+                                type="index"
+                                width="50">
+                        </el-table-column>
+                        <el-table-column
+                                label="歌曲"
+                                width="400">
+                            <template slot-scope="scope">
+                                <div class="flex-vertical-center">
+                                    <el-image
+                                            style="width: 55px; height: 55px;margin-right: 30px"
+                                            :src="scope.row.pic"
+                                            fit="fit"></el-image>
+                                    <div class="center" style="height: 55px">
+                                        <span class="music-title">{{scope.row.name}}</span>
+                                        <img style="width: 30px;height: 16px;margin-left: 5px" src="/assets/wusun.png">
+                                        <a style="display: inherit;" v-if="scope.row.hasmv" :href="'http://www.kuwo.cn/mvplay/'+scope.row.rid"
+                                           target="_blank">
+                                            <img style="width: 30px;height: 30px;margin-left: 5px" src="/assets/mv.png">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            prop="artist"
-                            label="歌手"
-                            width="120">
-                    </el-table-column>
-                    <el-table-column
-                            prop="album"
-                            width="200"
-                            label="专辑">
-                    </el-table-column>
-                    <el-table-column
-                            prop="songTimeMinutes"
-                            label="时长">
-                    </el-table-column>
-                    <el-table-column
-                            label="操作">
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                                prop="artist"
+                                label="歌手"
+                                width="120">
+                        </el-table-column>
+                        <el-table-column
+                                prop="album"
+                                width="200"
+                                label="专辑">
+                        </el-table-column>
+                        <el-table-column
+                                prop="songTimeMinutes"
+                                label="时长">
+                        </el-table-column>
+                        <el-table-column
+                                label="操作">
 
-                        <template slot-scope="scope">
-                            <el-link type="primary" :underline="false"
-                                     style="margin-right: 5px"
-                                     @click="fastDownloadMusic(scope.row.rid,scope.row.name)">播放
-                            </el-link>
+                            <template slot-scope="scope">
+                                <el-link type="primary" :underline="false"
+                                         style="margin-right: 5px"
+                                         @click="fastDownloadMusic(scope.row.rid,scope.row.name)">播放
+                                </el-link>
 
-                            <el-link type="primary" :underline="false"
-                                     @click="downloadMusic(scope.row)">下载
-                            </el-link>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                                <el-link type="primary" :underline="false"
+                                         @click="downloadMusic(scope.row)">下载
+                                </el-link>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <div v-if="page.total>0" class="flex-reverse" style="margin-top: 20px">
+                    <m-pagination @refresh="searchMusic" v-model="page"></m-pagination>
+                </div>
             </div>
-            <div v-if="page.total>0" class="flex-reverse" style="margin-top: 20px">
-                <m-pagination @refresh="searchMusic" v-model="page"></m-pagination>
+            <div v-else-if="tabs===2">
+                mv
             </div>
         </div>
         <div class="player" v-if="songSrc">
             <audio :src="songSrc" id="musicMp3" autoplay="" controls=""></audio>
         </div>
+
         <div>
             <friendly-link/>
         </div>
 
         <div class="footer">
             本站内容音乐下载器根据您的指令搜索各音乐平台得到的链接列表，不代表本站赞成被搜索网站的内容或立场
-            如果版权人认为在本站放置您的作品有损您的利益，请<a style="text-underline: none;color: #333333" href="mailto:1355473748@qq.com">联系</a>管理人员，本站确认后将会立即删除。<span style="color: red">本站所有资源仅供学习使用，请勿用于商业用途,下载后请二十四小时内删除</span>
+            如果版权人认为在本站放置您的作品有损您的利益，请<a style="text-underline: none;color: #333333"
+                                       href="mailto:1355473748@qq.com">联系</a>管理人员，本站确认后将会立即删除。<span style="color: red">本站所有资源仅供学习使用，请勿用于商业用途,下载后请二十四小时内删除</span>
         </div>
     </section>
 </template>
@@ -130,6 +140,9 @@
         },
 
         methods: {
+            clickTabs(tab) {
+                this.tabs = tab;
+            },
 
             blur() {
                 setTimeout(() => {
@@ -194,6 +207,7 @@
         },
         data() {
             return {
+                tabs: 0,
                 progress: 0,
                 isStore: true,
                 songSrc: '',

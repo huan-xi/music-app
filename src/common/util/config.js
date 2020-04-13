@@ -1,5 +1,5 @@
 // 域名
-// const baseUrl = process.env.music_url ? process.env.music_url : 'https://music.chengfeng8.top/api';
+// const baseUrl = 'https://music.chengfeng8.top/api';
 const baseUrl = "/api";
 
 const callbackUrl = 'https://tb.xqcrm.com/api/open/auth'
