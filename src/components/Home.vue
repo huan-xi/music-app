@@ -198,7 +198,13 @@
                 });
                 this.musicService.save(info).then(res => {
                     if (res.code === 0) {
-                        window.open(config.baseUrl + "/music/download?artist=" + info.artist + "&name=" + info.name)
+                        let url = res.data;
+                        if (url&&url.length > 0) {
+                            window.open(url);
+                        }else{
+                            window.open(config.baseUrl + "/music/download?artist=" + info.artist + "&name=" + info.name);
+                        }
+
                     } else {
                         this.$message.error("服务器准备资源失败")
                     }
