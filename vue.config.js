@@ -9,7 +9,8 @@ module.exports = {
     disableHostCheck: true,
     proxy:{
       '/':{
-        target: 'http://localhost:8008',
+        target: 'http://music.vaiwan.com',
+        // target: 'http://localhost:8008',
         changeOrigin: true,
         ws: true,
         pathRewrite: {
