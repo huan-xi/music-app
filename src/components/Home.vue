@@ -10,22 +10,20 @@
               v-model="key"
               @input="getKey"
               @blur="blur"
-              style="width: 725px;height: 55px"
               placeholder="搜索音乐/MV/歌单/歌手"
               size="large">
             <el-button slot="append" icon="el-icon-search" @click="searchMusic"/>
           </el-input>
         </div>
       </div>
-      <div v-if="showSearch"
-           style="position: absolute;top: 160px;left: 50%;transform: translate(-50%, 0);z-index: 999">
+      <div v-if="showSearch" class="search-card-box">
         <search-card @keySearch="keySearch" :isRank="key===''" :keys="keys"/>
       </div>
     </div>
     <div class="container">
       <div class="tabs">
         <span class="result-text">搜索结果</span>
-        <div class="tabs-title">
+        <div class="tabs-title" v-if="false">
           <ul>
             <li :class="tabs===0?'active':''" @click="clickTabs(0)">单曲</li>
             <li>专辑</li>
@@ -44,25 +42,25 @@
             <el-table-column
                 label="序号"
                 type="index"
-                width="50">
+                :width="mobile?35:50">
             </el-table-column>
             <el-table-column
                 label="歌曲"
-                width="400">
+                :width="mobile?130:400">
               <template slot-scope="scope">
-                <div class="flex-vertical-center">
+                <div class="flex-vertical-center column-box">
                   <el-image
-                      style="width: 55px; height: 55px;margin-right: 30px"
+                      class="son-img"
                       :src="scope.row.pic"
                       fit="fit"></el-image>
-                  <div class="center" style="height: 55px">
+                  <div class="center" >
                     <span class="music-title">{{ scope.row.name }}</span>
-                    <img style="width: 30px;height: 16px;margin-left: 5px" src="/assets/wusun.png">
-                    <a style="display: inherit;" v-if="scope.row.hasmv"
-                       :href="'http://www.kuwo.cn/mvplay/'+scope.row.rid"
-                       target="_blank">
-                      <img style="width: 30px;height: 30px;margin-left: 5px" src="/assets/mv.png">
-                    </a>
+                    <!--                    <img style="width: 30px;height: 16px;margin-left: 5px" src="/assets/wusun.png">
+                                        <a style="display: inherit;" v-if="scope.row.hasmv"
+                                           :href="'http://www.kuwo.cn/mvplay/'+scope.row.rid"
+                                           target="_blank">
+                                          <img style="width: 30px;height: 30px;margin-left: 5px" src="/assets/mv.png">
+                                        </a>-->
                   </div>
                 </div>
               </template>
@@ -70,15 +68,23 @@
             <el-table-column
                 prop="artist"
                 label="歌手"
-                width="120">
+                :width="mobile?100:120">
+              <template slot-scope="scope">
+                <div>
+                  <div>{{ scope.row.artist }}</div>
+                  <div>{{ scope.row.album }}</div>
+                </div>
+              </template>
             </el-table-column>
             <el-table-column
+                v-if="!mobile"
                 prop="album"
                 width="200"
                 label="专辑">
             </el-table-column>
             <el-table-column
                 prop="songTimeMinutes"
+                :width="mobile?60:null"
                 label="时长">
             </el-table-column>
             <el-table-column
@@ -105,19 +111,31 @@
         mv
       </div>
     </div>
+    <!--    <div>
+          <div class="flex-between" style="padding: 20px">
+            <div>
+              <div><span style="">歌曲名称</span></div>
+              <div><span>作者</span></div>
+            </div>
+            <div>
+              播放
+              下载
+            </div>
+          </div>
+        </div>-->
     <div class="player" v-if="songSrc">
       <audio :src="songSrc" id="musicMp3" autoplay="" controls=""></audio>
     </div>
 
     <div>
-      <friendly-link/>
+      <!--      <friendly-link/>-->
     </div>
 
-    <div class="footer">
-      本站内容音乐下载器根据您的指令搜索各音乐平台得到的链接列表，不代表本站赞成被搜索网站的内容或立场
-      如果版权人认为在本站放置您的作品有损您的利益，请<a style="text-underline: none;color: #333333"
-                                 href="mailto:1355473748@qq.com">联系</a>管理人员，本站确认后将会立即删除。<span style="color: red">本站所有资源仅供学习使用，请勿用于商业用途,下载后请二十四小时内删除</span>
-    </div>
+    <!--    <div class="footer">-->
+    <!--      本站内容音乐下载器根据您的指令搜索各音乐平台得到的链接列表，不代表本站赞成被搜索网站的内容或立场-->
+    <!--      如果版权人认为在本站放置您的作品有损您的利益，请<a style="text-underline: none;color: #333333"-->
+    <!--                                 href="mailto:1355473748@qq.com">联系</a>管理人员，本站确认后将会立即删除。<span style="color: red">本站所有资源仅供学习使用，请勿用于商业用途,下载后请二十四小时内删除</span>-->
+    <!--    </div>-->
   </section>
 </template>
 
@@ -219,6 +237,7 @@ export default {
   data() {
     return {
       tabs: 0,
+      mobile: true,
       progress: 0,
       isStore: true,
       songSrc: '',
@@ -277,6 +296,45 @@ export default {
 .search {
   position: relative;
   overflow: visible !important;
+  width: 720px;
+  height: 55px
+}
+
+.search-card-box {
+  position: absolute;
+  top: 160px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 999
+}
+.son-img {
+  width: 55px; height: 55px;margin-right: 30px
+}
+
+@media screen and (max-width: 720px) {
+  .page {
+    .search-card-box {
+      top: 75px;
+    }
+    .son-img {
+      margin-right: 10px!important;
+    }
+    .container {
+      padding: 20px 10px;
+    }
+  }
+
+  .search-box {
+    height: 100px !important;
+  }
+
+  .search {
+    width: 325px;
+  }
+
+  .page .search .el-input__inner {
+    height: 40px !important;
+  }
 }
 
 .search .el-input__inner {
@@ -290,7 +348,6 @@ export default {
   .el-table {
     z-index: 10;
   }
-
 }
 
 .search-box {

@@ -60,6 +60,11 @@
 </script>
 
 <style scoped lang="less">
+@media screen and (max-width: 720px) {
+  .search-card {
+    width: 325px !important;
+  }
+}
     .search-card {
         width: 725px;
         transition-property: top;
