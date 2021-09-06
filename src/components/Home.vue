@@ -53,7 +53,7 @@
                       class="son-img"
                       :src="scope.row.pic"
                       fit="fit"></el-image>
-                  <div class="center" >
+                  <div class="center">
                     <span class="music-title">{{ scope.row.name }}</span>
                     <!--                    <img style="width: 30px;height: 16px;margin-left: 5px" src="/assets/wusun.png">
                                         <a style="display: inherit;" v-if="scope.row.hasmv"
@@ -126,11 +126,28 @@
     <div class="player" v-if="songSrc">
       <audio :src="songSrc" id="musicMp3" autoplay="" controls=""></audio>
     </div>
-
+    <div>
+      <el-dialog
+          title="提示"
+          :visible.sync="dialogVisible"
+          width="30%"
+          :before-close="handleClose">
+        <span style="font-size: 18px">推荐一个免费制作证件照小程序,可以先收藏一下,以便不时之需</span>
+        <div class="center" style="margin-top: 20px">
+          <el-image src="https://nb-readable.oss-cn-zhangjiakou.aliyuncs.com/images/gh_c174f45da2ae_258%20(1).jpg"></el-image>
+        </div>
+        <span slot="footer" class="dialog-footer">
+    <el-button type="primary" size="mini" @click="dialogVisible = false">确 定</el-button>
+  </span>
+      </el-dialog>
+    </div>
     <div>
       <!--      <friendly-link/>-->
     </div>
-
+    <div style="position: fixed;right: 10px;bottom: 150px;z-index:1000;display: flex;flex-direction: column">
+      <el-image style="width: 100px; height: 100px" src="https://nb-readable.oss-cn-zhangjiakou.aliyuncs.com/images/gh_c174f45da2ae_258%20(1).jpg"></el-image>
+      <span style="margin-top: 10px">扫码使用小程序</span>
+    </div>
     <!--    <div class="footer">-->
     <!--      本站内容音乐下载器根据您的指令搜索各音乐平台得到的链接列表，不代表本站赞成被搜索网站的内容或立场-->
     <!--      如果版权人认为在本站放置您的作品有损您的利益，请<a style="text-underline: none;color: #333333"-->
@@ -156,6 +173,12 @@ export default {
   created() {
     this.key = '周杰伦';
     this.searchMusic();
+    //读取本地
+    let time = sessionStorage.getItem("lastShowTime");
+    if (!(time && new Date().getTime() - time < 1000 * 60 * 60)) {
+      this.dialogVisible = true;
+      sessionStorage.setItem("lastShowTime", new Date().getTime());
+    }
   },
 
   methods: {
@@ -234,10 +257,15 @@ export default {
       }).finally(() => loading.close())
     }
   },
+  computed: {
+    mobile() {
+      return navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+    },
+  },
   data() {
     return {
       tabs: 0,
-      mobile: true,
+      dialogVisible: false,
       progress: 0,
       isStore: true,
       songSrc: '',
@@ -307,8 +335,11 @@ export default {
   transform: translate(-50%, 0);
   z-index: 999
 }
+
 .son-img {
-  width: 55px; height: 55px;margin-right: 30px
+  width: 55px;
+  height: 55px;
+  margin-right: 30px
 }
 
 @media screen and (max-width: 720px) {
@@ -316,9 +347,11 @@ export default {
     .search-card-box {
       top: 75px;
     }
+
     .son-img {
-      margin-right: 10px!important;
+      margin-right: 10px !important;
     }
+
     .container {
       padding: 20px 10px;
     }
